@@ -1,0 +1,287 @@
+<title>Rooted Climate Jobs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: search header that asks who you are, then a filter rail beside a results list; a job opens in a detail panel */
+:root {
+  --bg: #f3f6f4;
+  --surface: #ffffff;
+  --ink: #15211d;
+  --muted: #5a6b65;
+  --line: #d7e0dc;
+  --accent: #1f6b55;
+  --accent-soft: #e1efe9;
+  --sun: #f2c14e;
+  --sun-ink: #5a4100;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1614; --surface: #17211e; --ink: #e6efeb; --muted: #9db0a9; --line: #2a3833;
+    --accent: #5cc4a2; --accent-soft: #1d3a31; --sun: #f2c14e; --sun-ink: #2b2000; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1614; --surface: #17211e; --ink: #e6efeb; --muted: #9db0a9; --line: #2a3833;
+  --accent: #5cc4a2; --accent-soft: #1d3a31; --sun: #f2c14e; --sun-ink: #2b2000; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+.sample { margin-top: 16px; font-family: var(--mono); font-size: 12px; color: var(--sun-ink); background: var(--sun); display: inline-block; padding: 4px 10px; border-radius: 4px; }
+header.top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding-block: 20px 8px; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: -0.01em; color: var(--accent); }
+.tag { color: var(--muted); font-size: 15px; }
+.hero { padding-block: 24px 20px; }
+.hero h1 { font-family: var(--display); font-weight: 700; font-size: clamp(30px, 5vw, 46px); line-height: 1.08; margin: 0 0 8px; text-wrap: balance; max-width: 20ch; }
+.hero p { margin: 0; color: var(--muted); max-width: 60ch; }
+.picker { margin-top: 22px; }
+.picker-label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 600 15px var(--body); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.chip:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.translate { margin-top: 14px; font-size: 15px; color: var(--ink); background: var(--accent-soft); padding: 10px 14px; border-radius: 8px; max-width: 72ch; }
+.translate[hidden] { display: none !important; }
+.main { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 32px; margin-top: 28px; }
+aside.filters { display: flex; flex-direction: column; gap: 22px; }
+.fgroup h3 { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; font-weight: 500; }
+.search { width: 100%; font: 16px var(--body); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+select { width: 100%; font: 16px var(--body); padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.check { display: flex; align-items: center; gap: 8px; font-size: 15px; padding: 3px 0; cursor: pointer; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; }
+.results-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.count { font-family: var(--display); font-weight: 500; font-size: 20px; }
+.fresh { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.job { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 16px 4px; border-bottom: 1px solid var(--line); cursor: pointer; background: none; border-left: 0; border-right: 0; border-top: 0; text-align: left; color: inherit; font: inherit; width: 100%; }
+.job:hover .title { color: var(--accent); }
+.title { font-family: var(--display); font-weight: 500; font-size: 19px; line-height: 1.25; }
+.co { color: var(--muted); font-size: 15px; }
+.pay { font-family: var(--mono); font-size: 13px; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.pill { font-size: 13px; padding: 2px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
+.pill.new { background: var(--sun); color: var(--sun-ink); font-weight: 600; }
+.pill.plain { background: none; border: 1px solid var(--line); color: var(--muted); }
+.empty { padding: 32px 4px; color: var(--muted); }
+.empty button { font: 600 15px var(--body); color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+/* detail panel */
+.scrim { position: fixed; inset: 0; background: rgba(10, 20, 16, 0.45); z-index: 20; }
+.panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 100%); background: var(--surface); z-index: 21; overflow-y: auto;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) calc(32px + env(safe-area-inset-bottom, 0px)) 24px;
+  border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 18px;
+}
+.close { align-self: flex-end; font: 600 14px var(--body); background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+.panel h2 { font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1.12; margin: 0; text-wrap: balance; }
+.facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 15px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+.cocard { background: var(--accent-soft); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.cocard .lab { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.cocard strong { font-family: var(--display); font-size: 18px; font-weight: 500; }
+.why { font-size: 15px; }
+.apply { display: inline-block; text-align: center; font: 600 16px var(--body); background: var(--accent); color: var(--bg); padding: 12px 18px; border-radius: 8px; text-decoration: none; }
+.small { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+@media (max-width: 760px) {
+  .main { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  aside.filters { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  aside.filters .fgroup.full { grid-column: 1 / -1; }
+}
+@media (max-width: 420px) { aside.filters { grid-template-columns: 1fr; } .job { grid-template-columns: minmax(0, 1fr); } .pay { text-align: left; } }
+@media (prefers-reduced-motion: no-preference) { .panel { animation: slide 0.18s ease-out; } @keyframes slide { from { transform: translateX(24px); opacity: 0.6; } to { transform: none; opacity: 1; } } }
+</style>
+
+<div class="wrap">
+    <header class="top">
+    <div class="brand">Rooted</div>
+    <div class="tag">Climate jobs for people who are not in climate yet</div>
+  </header>
+
+  <section class="hero">
+    <h1>Bring the job you have to the problem that matters.</h1>
+    <p>Pick what you do today. We show climate roles that use those skills, near you or remote, checked against each employer's own careers page every day.</p>
+    <div class="picker">
+      <div class="picker-label">What do you do today?</div>
+      <div class="chips" id="bg"></div>
+      <div class="translate" id="translate" hidden></div>
+    </div>
+  </section>
+
+  <div class="main">
+    <aside class="filters" aria-label="Filters">
+      <div class="fgroup full">
+        <h3><label for="q">Search</label></h3>
+        <input class="search" id="q" type="search" placeholder="Title, company or skill">
+      </div>
+      <div class="fgroup">
+        <h3><label for="loc">Location</label></h3>
+        <select id="loc">
+          <option value="all">Anywhere</option>
+          <option value="rdu">Raleigh Durham area</option>
+          <option value="remote">Remote, US</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <h3>Impact area</h3>
+        <div id="impact"></div>
+      </div>
+      <div class="fgroup">
+        <h3>Must haves</h3>
+        <label class="check"><input type="checkbox" id="nobg"> No climate background needed</label>
+        <label class="check"><input type="checkbox" id="pay"> Salary listed</label>
+      </div>
+    </aside>
+
+    <section aria-live="polite">
+      <div class="results-head">
+        <div class="count" id="count"></div>
+        <div class="fresh" id="freshness">Loading listings</div>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="panel" id="panel" hidden role="dialog" aria-modal="true" aria-labelledby="ptitle"></aside>
+
+<script>
+const BACKGROUNDS = {
+  Sales: "Sales skills map to account executive, partnerships and business development roles at energy software companies, solar installers and conservation groups.",
+  Operations: "Operations skills map to project coordination, supply chain and program management, where clean energy builds and nonprofits are short handed.",
+  Finance: "Finance skills map to project finance, grant management and analyst roles that decide which projects get built.",
+  Marketing: "Marketing skills map to growth, communications and community outreach roles that bring new customers and members in.",
+  Engineering: "Engineering skills map to software, hardware and grid roles across clean power, batteries and transportation.",
+  Trades: "Trades skills map to installer, electrician and technician roles, many with paid training and no climate background needed.",
+  Data: "Data skills map to analyst and scientist roles measuring emissions, land use and energy demand.",
+  Policy: "Policy skills map to government sustainability offices and advocacy groups shaping local climate plans."
+};
+const IMPACTS = ["Clean power", "Buildings", "Transportation", "Conservation", "Climate software", "Circular economy"];
+let EMPLOYERS = {};
+let JOBS = [];
+let GENERATED = null;
+
+const state = { bg: "Sales", q: "", loc: "all", impacts: new Set(), nobg: false, pay: false };
+try { const saved = localStorage.getItem("rooted-bg"); if (saved && BACKGROUNDS[saved]) state.bg = saved; } catch (e) {}
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function renderChips() {
+  $("bg").innerHTML = ["All", ...Object.keys(BACKGROUNDS)].map(b =>
+    `<button class="chip" type="button" data-bg="${b}" aria-pressed="${state.bg === b}">${b === "All" ? "Show everything" : b}</button>`).join("");
+  const t = $("translate");
+  if (state.bg !== "All") { t.hidden = false; t.textContent = BACKGROUNDS[state.bg]; } else { t.hidden = true; }
+}
+function renderImpacts() {
+  $("impact").innerHTML = IMPACTS.map((name, i) =>
+    `<label class="check"><input type="checkbox" id="imp${i}" data-impact="${name}" ${state.impacts.has(name) ? "checked" : ""}> ${name}</label>`).join("");
+}
+function matches(j) {
+  const e = EMPLOYERS[j.emp];
+  if (state.bg !== "All" && j.bg !== state.bg) return false;
+  if (state.loc !== "all" && j.loc !== state.loc) return false;
+  if (state.impacts.size && !state.impacts.has(e.impact)) return false;
+  if (state.nobg && !j.nobg) return false;
+  if (state.pay && !j.pay) return false;
+  const q = state.q.trim().toLowerCase();
+  if (q && !(j.title + " " + e.name + " " + e.what + " " + j.bg).toLowerCase().includes(q)) return false;
+  return true;
+}
+function renderList() {
+  const rows = JOBS.filter(matches);
+  $("count").textContent = rows.length === 1 ? "1 role" : rows.length + " roles";
+  if (!rows.length) {
+    $("list").innerHTML = `<div class="empty">No roles match all of these filters. <button type="button" id="reset">Clear filters</button></div>`;
+    return;
+  }
+  $("list").innerHTML = rows.map(j => {
+    const e = EMPLOYERS[j.emp];
+    return `<button class="job" type="button" data-id="${j.id}">
+      <div><div class="title">${esc(j.title)}</div><div class="co">${esc(e.name)} · ${esc(j.where)}</div></div>
+      <div class="pay">${j.pay ? esc(j.pay) : '<span class="co">Salary not listed</span>'}</div>
+      <div class="meta">
+        ${j.fresh <= 7 ? '<span class="pill new">Posted this week</span>' : ""}
+        <span class="pill">${esc(e.impact)}</span>
+        ${j.nobg ? '<span class="pill plain">No climate background needed</span>' : ""}
+      </div></button>`;
+  }).join("");
+}
+function openJob(id) {
+  const j = JOBS.find(x => x.id === id); if (!j) return;
+  const e = EMPLOYERS[j.emp];
+  $("panel").innerHTML = `
+    <button class="close" type="button" id="close">Close</button>
+    <div><div class="co">${esc(e.name)}</div><h2 id="ptitle">${esc(j.title)}</h2></div>
+    <dl class="facts">
+      <dt>Where</dt><dd>${esc(j.where)}</dd>
+      <dt>Pay</dt><dd>${j.pay ? esc(j.pay) : "Not listed by employer"}</dd>
+      <dt>Fits</dt><dd>${esc(j.bg)} background${j.nobg ? ", no climate experience required" : ", climate experience preferred"}</dd>
+    </dl>
+    <div class="cocard">
+      <span class="lab">In plain English</span>
+      <strong>${esc(e.what)}</strong>
+      <span class="why"><b>Why it helps:</b> ${esc(e.why)}</span>
+      <span class="small">Impact area: ${esc(e.impact)}</span>
+    </div>
+    <a class="apply" href="${esc(j.url)}" target="_blank" rel="noopener">Apply on ${esc(e.name)}'s site</a>
+    <div class="small">Verified live on the employer's ${esc(j.src)} board ${ago(j.last_seen)}. Roles not seen for 48h are removed.</div>`;
+  $("panel").hidden = false; $("scrim").hidden = false; $("close").focus();
+}
+function closeJob() { $("panel").hidden = true; $("scrim").hidden = true; }
+function render() { renderChips(); renderList(); }
+
+document.addEventListener("click", ev => {
+  const chip = ev.target.closest("[data-bg]");
+  if (chip) { state.bg = chip.dataset.bg; try { localStorage.setItem("rooted-bg", state.bg); } catch (e) {} render(); return; }
+  const job = ev.target.closest(".job");
+  if (job) { openJob(Number(job.dataset.id)); return; }
+  if (ev.target.id === "close" || ev.target.id === "scrim") { closeJob(); return; }
+  if (ev.target.id === "reset") {
+    Object.assign(state, { bg: "All", q: "", loc: "all", nobg: false, pay: false }); state.impacts.clear();
+    $("q").value = ""; $("loc").value = "all"; $("nobg").checked = false; $("pay").checked = false; renderImpacts(); render();
+  }
+});
+document.addEventListener("change", ev => {
+  const t = ev.target;
+  if (t.dataset.impact) { t.checked ? state.impacts.add(t.dataset.impact) : state.impacts.delete(t.dataset.impact); }
+  if (t.id === "loc") state.loc = t.value;
+  if (t.id === "nobg") state.nobg = t.checked;
+  if (t.id === "pay") state.pay = t.checked;
+  renderList();
+});
+$("q").addEventListener("input", ev => { state.q = ev.target.value; renderList(); });
+document.addEventListener("keydown", ev => { if (ev.key === "Escape" && !$("panel").hidden) closeJob(); });
+
+function ago(iso) {
+  const h = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 36e5));
+  return h < 1 ? "within the hour" : h < 48 ? h + "h ago" : Math.round(h / 24) + " days ago";
+}
+async function load() {
+  try {
+    const [jr, er] = await Promise.all([fetch("data/jobs.json"), fetch("data/employers.json")]);
+    const data = await jr.json();
+    EMPLOYERS = await er.json();
+    GENERATED = data.generated_at;
+    JOBS = data.jobs.filter(j => EMPLOYERS[j.employer]).map((j, i) => ({
+      id: i + 1, title: j.title, emp: j.employer, bg: j.family,
+      loc: j.remote ? "remote" : (j.metro || "other"), where: j.location || (j.remote ? "Remote" : ""),
+      pay: j.pay, nobg: j.no_climate_background, src: j.source, url: j.url, last_seen: j.last_seen,
+      fresh: (Date.now() - Date.parse(j.first_seen)) / 864e5
+    }));
+    $("freshness").textContent = "Last checked against employer boards " + ago(GENERATED);
+  } catch (e) {
+    $("freshness").textContent = "Listings could not load. Run the ingest job, then refresh.";
+  }
+  renderImpacts(); render();
+}
+load();
+</script>

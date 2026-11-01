@@ -1,0 +1,53 @@
+[
+ {
+  "id": "watershed",
+  "name": "Watershed",
+  "ats": "ashby",
+  "slug": "watershed",
+  "impact": "Climate software",
+  "what": "Software that helps companies measure, report and reduce their carbon emissions.",
+  "why": "Companies cannot cut emissions they have not measured.",
+  "_note": "Slug is a guess. Confirm with: python -m rooted.check data/employers.json"
+ },
+ {
+  "id": "arcadia",
+  "name": "Arcadia",
+  "ats": "greenhouse",
+  "slug": "arcadia",
+  "impact": "Climate software",
+  "what": "A data platform that connects utility energy data to companies building clean energy products.",
+  "why": "Better energy data makes it easier to sell and finance clean energy.",
+  "_note": "Slug is a guess. Confirm before launch."
+ },
+ {
+  "id": "palmetto",
+  "name": "Palmetto",
+  "ats": "lever",
+  "slug": "palmetto",
+  "impact": "Clean power",
+  "what": "Helps homeowners go solar and electrify their homes.",
+  "why": "Rooftop solar replaces grid power that still comes partly from fossil fuels.",
+  "_note": "Slug is a guess. Confirm before launch."
+ },
+ {
+  "id": "example-land-trust",
+  "name": "Example Land Trust (replace me)",
+  "ats": "manual",
+  "slug": "",
+  "impact": "Conservation",
+  "what": "A local nonprofit with no supported job board. Enter its roles by hand.",
+  "why": "Protected land stores carbon and protects towns from flooding.",
+  "manual_jobs": [
+   {
+    "uid": "manual:example-land-trust:dev-associate-2026",
+    "title": "Development Associate",
+    "location": "Durham, NC",
+    "remote": false,
+    "pay": "$52k to $60k",
+    "url": "https://example.org/careers",
+    "posted_at": "2026-11-01",
+    "description": "Build relationships with donors and run our annual giving campaign."
+   }
+  ]
+ }
+]
